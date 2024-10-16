@@ -23,6 +23,11 @@ import time
 
 from gym import logger
 
+import os
+
+# if not os.path.exists(filepath):
+#     raise FileNotFoundError(f"Required file {filepath} not found.")
+
 # from gym.vector.vector_env import VectorEnv
 from .vector_env import VectorEnv
 from gym.error import (
@@ -42,6 +47,8 @@ from gym.vector.utils import (
     clear_mpi_env_vars,
 )
 
+
+mp.set_start_method('spawn', force=True) #added 10.9 Use spawn Start Method: Sometimes the fork method can cause issues with shared memory in multiprocessing. Set the start method to spawn
 
 __all__ = ["AsyncVectorEnv"]
 
@@ -139,6 +146,7 @@ class AsyncVectorEnv(VectorEnv):
         worker=None,
         delay_init=False,
     ):
+        time.sleep(0.1)
         ctx = mp.get_context(context)
         self.env_fns = env_fns
         self.shared_memory = shared_memory
@@ -710,7 +718,13 @@ class AsyncVectorEnv(VectorEnv):
 
 def _worker(index, env_fn, pipe, parent_pipe, shared_memory, error_queue):
     assert shared_memory is None
-    env = env_fn()
+    #env = env_fn()
+    try:
+        env = env_fn()
+    except Exception as e:
+        logging.error(f"Failed to create environment: {e}")
+        raise
+
     parent_pipe.close()
     try:
         while True:
@@ -773,7 +787,12 @@ def _worker(index, env_fn, pipe, parent_pipe, shared_memory, error_queue):
 
 def _worker_shared_memory(index, env_fn, pipe, parent_pipe, shared_memory, error_queue):
     assert shared_memory is not None
-    env = env_fn()
+    #env = env_fn()
+    try:
+        env = env_fn()
+    except Exception as e:
+        logging.error(f"Failed to create environment: {e}")
+        raise
     observation_space = env.observation_space
     parent_pipe.close()
     try:

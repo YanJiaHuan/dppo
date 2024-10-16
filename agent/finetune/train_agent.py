@@ -40,6 +40,11 @@ class TrainAgent:
         # Make vectorized env
         self.env_name = cfg.env.name
         env_type = cfg.env.get("env_type", None)
+
+        '''
+        Added by jh, make_async is used to create mutiple 
+        '''
+
         self.venv = make_async(
             cfg.env.name,
             env_type=env_type,

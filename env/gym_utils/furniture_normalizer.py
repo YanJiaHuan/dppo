@@ -36,6 +36,11 @@ class LinearNormalizer(nn.Module):
 
     def _normalize(self, x, key):
         stats = self.stats[key]
+        print("status[max]'s shape is: ", stats["max"].shape)
+        print("status[min]'s shape is: ", stats["min"].shape)
+        print("x's shape is: ", x.shape)
+        x = x[:, :, :58]
+        print("x's shape is: ", x.shape)
         x = (x - stats["min"]) / (stats["max"] - stats["min"])
         x = 2 * x - 1
         return x
