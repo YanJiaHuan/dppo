@@ -42,7 +42,7 @@ class TrainAgent:
         env_type = cfg.env.get("env_type", None)
 
         '''
-        Added by jh, make_async is used to create mutiple 
+        Added by jh, make_async is used to create mutiple.
         '''
 
         self.venv = make_async(
