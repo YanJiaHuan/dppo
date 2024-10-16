@@ -42,7 +42,7 @@ class TrainAgent:
         env_type = cfg.env.get("env_type", None)
 
         '''
-        Added by jh, make_async is used to create mutiple.
+        Added by jh, make_async is used to create mutiple venv to parellelize the training process
         '''
 
         self.venv = make_async(
@@ -55,7 +55,7 @@ class TrainAgent:
             robomimic_env_cfg_path=cfg.get("robomimic_env_cfg_path", None),
             shape_meta=cfg.get("shape_meta", None),
             use_image_obs=cfg.env.get("use_image_obs", False),
-            render=cfg.env.get("render", False),
+            render=cfg.env.get("render", False),  # default as Fasle
             render_offscreen=cfg.env.get("save_video", False),
             obs_dim=cfg.obs_dim,
             action_dim=cfg.action_dim,
@@ -160,7 +160,7 @@ class TrainAgent:
                 key: np.stack([obs_venv[i][key] for i in range(self.n_envs)])
                 for key in obs_venv[0].keys()
             }
-        if verbose:
+        if verbose: # if verbose == if detail 
             for index in range(self.n_envs):
                 logging.info(
                     f"<-- Reset environment {index} with options {options_venv[index]}"
