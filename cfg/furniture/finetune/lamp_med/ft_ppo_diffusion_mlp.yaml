@@ -23,13 +23,13 @@ act_steps: 8
 use_ddim: True
 
 env:
-  n_envs: 1000
+  n_envs: 1
   name: ${env_name}
   env_type: furniture
   max_episode_steps: 1000
   best_reward_threshold_for_success: 2
   specific:
-    headless: true
+    headless: false
     furniture: lamp
     randomness: med
     normalization_path: ${normalization_path}
